@@ -1,5 +1,3 @@
-
-
 # Datacards-to-KG_Pipeline_1
 
 This pipeline is part of a master's thesis project that uses large language models (LLMs) to extract semantic triples from dataset cards and populate a knowledge graph based on the OntoDM ontology. It supports different prompting strategies, including cleaned metadata, scraped raw text, and few-shot examples, using the Gemini language model.
@@ -31,11 +29,13 @@ The pipeline processes dataset cards in three main stages:
 
 #  NL_to_SPARQL_Pipeline_2
 
+
 This pipeline translates natural language questions into executable SPARQL queries using Gemini-based prompting and evaluates the quality of those queries over RDF data stored in GraphDB. It enables semantic querying of knowledge graphs generated from structured metadata such as data cards.
 
 ---
 
 ## Contents
+
 
 ```bash
 NL_to_SPARQL_Pipeline_2/
@@ -44,6 +44,33 @@ NL_to_SPARQL_Pipeline_2/
 ├── sql_graphdb2(groundtruth).py     # Script for comparing SPARQL responses to gold-standard answers
 ├── .env                              # (User-created) Gemini API Key + GraphDB connection info
 
-#  GraphRAG-Based_Data_Search_Pipeline_3
+---
+
+
+
+
+
+
+ # GraphRAG-Based_Data_Search_Pipeline_3
 
 This pipeline implements a **hybrid symbolic-neural data discovery system** inspired by the GraphRAG architecture. It enhances natural language question answering over RDF data by combining a **Neo4j knowledge graph** backend with a **FAISS-based semantic retriever**, enabling both precise symbolic execution and fuzzy neural retrieval over metadata-enriched datasets.
+
+---
+
+## 🧱 Key Components
+
+| File | Description |
+|------|-------------|
+| `create_faiss_index.py.py` | Builds a FAISS vector index from entity/property descriptions |
+| `csv_to_neo4j_loader.py`  | Loads CSV-exported RDF triples into a Neo4j graph database |
+| `KG_query.py`             | Takes NL questions, retrieves context, and generates Cypher queries |
+
+---
+
+## 🛠 Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/GraphRAG-Based_Data_Search_Pipeline_3.git
+cd GraphRAG-Based_Data_Search_Pipeline_3
