@@ -1,0 +1,13 @@
+# Core Gemini LLM API
+google-generativeai>=0.5.1
+
+# SPARQL querying
+requests>=2.31.0
+
+# Environment variable loading
+python-dotenv>=1.0.1
+
+# Optional: Evaluation and display
+pandas>=2.2.2
+tqdm>=4.66.4
+rdflib>=7.0.0
