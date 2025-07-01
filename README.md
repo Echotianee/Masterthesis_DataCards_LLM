@@ -67,10 +67,3 @@ This pipeline implements a **hybrid symbolic-neural data discovery system** insp
 
 ---
 
-## 🛠 Setup Instructions
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/GraphRAG-Based_Data_Search_Pipeline_3.git
-cd GraphRAG-Based_Data_Search_Pipeline_3
