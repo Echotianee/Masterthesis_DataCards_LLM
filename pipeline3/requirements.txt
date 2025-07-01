@@ -1,0 +1,10 @@
+langchain
+langchain_community
+neo4j-graphrag
+faiss-cpu
+python-dotenv   
+google-generativeai
+sentence_transformers
+pandas
+matplotlib
+seaborn

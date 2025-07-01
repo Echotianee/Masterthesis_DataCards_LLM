@@ -1,0 +1,149 @@
+# TTL to CSV Converter for Neo4j
+
+This tool converts RDF Turtle (.ttl) files into CSV format suitable for Neo4j graph database import. It extracts nodes and relationships from RDF triples and outputs them as separate CSV files.
+
+## Features
+
+- **Batch Processing**: Convert entire folders of TTL files at once
+- **Single File Processing**: Process individual TTL files
+- **Neo4j Ready**: Outputs CSV files in Neo4j-compatible format
+- **Automatic Directory Creation**: Creates output directories if they don't exist
+- **Error Handling**: Continues processing even if individual files fail
+- **Progress Feedback**: Shows processing status for each file
+
+## Requirements
+
+```bash
+pip install rdflib pandas
+```
+
+## Usage
+
+### Batch Processing (Recommended)
+
+Process all TTL files in a folder:
+
+```bash
+python RAG.py --input-folder "/path/to/ttl/files" --output-folder "/path/to/csv/output"
+```
+
+**Example for your thesis project:**
+```bash
+python RAG.py --input-folder "/Users/wangyidan/Documents/Thesis/datasets/version2/Onto/ttl_outputs_enrichment_scraped" --output-folder "/Users/wangyidan/Documents/Thesis/datasets/version2/Onto/rag_pipeline_3/ttl_outputs_enrichment_scraped_csv"
+```
+
+### Single File Processing
+
+Process a single TTL file:
+
+```bash
+python RAG.py --turtle input.ttl --nodes output_nodes.csv --rels output_rels.csv
+```
+
+## Output Format
+
+For each input TTL file `example.ttl`, the tool creates two CSV files:
+
+### Nodes CSV (`example_nodes.csv`)
+| Column | Description |
+|--------|-------------|
+| `id` | Full URI of the node |
+| `label` | Short label (fragment after #) |
+
+### Relationships CSV (`example_rels.csv`)
+| Column | Description |
+|--------|-------------|
+| `source` | Full URI of the source node |
+| `type` | Relationship type (fragment after #) |
+| `target` | Full URI of the target node |
+
+## File Structure
+
+```
+Input Folder/
+├── file1.ttl
+├── file2.ttl
+└── file3.ttl
+
+Output Folder/
+├── file1_nodes.csv
+├── file1_rels.csv
+├── file2_nodes.csv
+├── file2_rels.csv
+├── file3_nodes.csv
+└── file3_rels.csv
+```
+
+## Command Line Arguments
+
+### Batch Processing Mode
+- `--input-folder`: Path to folder containing TTL files
+- `--output-folder`: Path to folder for CSV output
+
+### Single File Mode
+- `--turtle`: Path to single TTL file
+- `--nodes`: Output path for nodes CSV (default: `nodes.csv`)
+- `--rels`: Output path for relationships CSV (default: `rels.csv`)
+
+## Examples
+
+### Process Thesis Dataset
+```bash
+# Convert all TTL files from enrichment process
+python RAG.py \
+  --input-folder "/Users/wangyidan/Documents/Thesis/datasets/version2/Onto/ttl_outputs_enrichment_scraped" \
+  --output-folder "/Users/wangyidan/Documents/Thesis/datasets/version2/Onto/rag_pipeline_3/ttl_outputs_enrichment_scraped_csv"
+```
+
+### Process Single File
+```bash
+# Convert single ontology file
+python RAG.py --turtle ontology.ttl --nodes ont_nodes.csv --rels ont_rels.csv
+```
+
+## Neo4j Import
+
+Once you have the CSV files, you can import them into Neo4j using Cypher:
+
+```cypher
+// Load nodes
+LOAD CSV WITH HEADERS FROM 'file:///path/to/nodes.csv' AS row
+CREATE (:Node {id: row.id, label: row.label})
+
+// Load relationships
+LOAD CSV WITH HEADERS FROM 'file:///path/to/rels.csv' AS row
+MATCH (source {id: row.source})
+MATCH (target {id: row.target})
+CREATE (source)-[:RELATION {type: row.type}]->(target)
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **No TTL files found**: Check that your input folder path is correct and contains `.ttl` files
+2. **Permission errors**: Ensure you have read access to input folder and write access to output folder
+3. **Parsing errors**: Some TTL files may have syntax issues - the script will skip these and continue
+
+### Error Messages
+
+- `No TTL files found in {folder}`: The input folder doesn't contain any `.ttl` files
+- `Error processing {file}`: Individual file failed to parse - check TTL syntax
+
+## Technical Details
+
+- **RDF Processing**: Uses `rdflib` to parse Turtle format
+- **Node Extraction**: All subjects and URI objects become nodes
+- **Relationship Extraction**: All predicates become relationship types
+- **Deduplication**: Removes duplicate nodes automatically
+- **URI Handling**: Extracts fragment (after #) as labels while preserving full URI as ID
+
+## Performance Notes
+
+- Processing time depends on TTL file size and complexity
+- Large datasets may require significant memory
+- Consider processing in smaller batches for very large datasets
+
+## License
+
+This tool is part of the thesis project for RDF to Neo4j conversion pipeline.
